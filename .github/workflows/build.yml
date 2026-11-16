@@ -14,21 +14,24 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Java 17 kur
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Gradle kur (wrapper JAR dahil)
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: '8.7'
+      - name: Android SDK kur
+        uses: android-actions/setup-android@v3
+
+      - name: Android Build Tools kur
+        run: sdkmanager "build-tools;34.0.0" "platforms;android-34"
 
       - name: gradlew iznini ver
         run: chmod +x gradlew
 
       - name: APK derle
-        run: gradle assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --no-daemon --no-build-cache --stacktrace
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
       - name: APK'yı yükle
         uses: actions/upload-artifact@v4
