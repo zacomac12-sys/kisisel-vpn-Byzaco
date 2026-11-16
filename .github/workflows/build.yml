@@ -22,14 +22,13 @@ jobs:
       - name: Android SDK lisanslarını kabul et ve bileşenleri indir
         shell: bash
         run: |
-          set -euo pipefail
           echo "ANDROID_HOME=$ANDROID_HOME"
           SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | sort -V | tail -n 1)"
           if [ -z "$SDKMANAGER" ]; then
             echo "sdkmanager bulunamadı: $ANDROID_HOME/cmdline-tools"
             exit 1
           fi
-          yes | "$SDKMANAGER" --licenses
+          yes | "$SDKMANAGER" --licenses || true
           "$SDKMANAGER" "platforms;android-34" "build-tools;34.0.0"
 
       - name: Gradle 8.7 indir
